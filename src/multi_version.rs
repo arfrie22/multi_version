@@ -119,7 +119,7 @@ pub fn derive_multi_version_inner(ast: &DeriveInput) -> syn::Result<TokenStream>
     Ok(quote! {
         impl #name {
             #[inline]
-            fn implemented_since (&self) -> semver::Version
+            pub fn implemented_since (&self) -> semver::Version
             {
                 match self {
                     #(#implemented_arms),*
@@ -127,7 +127,7 @@ pub fn derive_multi_version_inner(ast: &DeriveInput) -> syn::Result<TokenStream>
             }
 
             #[inline]
-            fn deprecated_since (&self) -> Option<semver::Version>
+            pub fn deprecated_since (&self) -> Option<semver::Version>
             {
                 match self {
                     #(#deprecated_arms),*
@@ -135,7 +135,7 @@ pub fn derive_multi_version_inner(ast: &DeriveInput) -> syn::Result<TokenStream>
             }
 
             #[inline]
-            fn value_for_version (&self, version: &semver::Version) -> Option<#discriminant_type>
+            pub fn value_for_version (&self, version: &semver::Version) -> Option<#discriminant_type>
             {
                 if self.exists_in(version) {
                 Some (match self {
@@ -147,7 +147,7 @@ pub fn derive_multi_version_inner(ast: &DeriveInput) -> syn::Result<TokenStream>
             }
 
             #[inline]
-            fn exists_in (&self, version: &semver::Version) -> bool
+            pub fn exists_in (&self, version: &semver::Version) -> bool
             {
                 *version >= self.implemented_since() && {
                     if let Some(depricated) = self.deprecated_since() {
@@ -159,7 +159,7 @@ pub fn derive_multi_version_inner(ast: &DeriveInput) -> syn::Result<TokenStream>
             }
 
             #[inline]
-            fn get_all_values (version: &semver::Version, skip: Option<&[Self]>) -> Vec<Self>
+            pub fn get_all_values (version: &semver::Version, skip: Option<&[Self]>) -> Vec<Self>
             {
                 let all_variants = #all_variants;
                 let mut values = Vec::new();
